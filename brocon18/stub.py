@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 import broker
+import broker.bro
 import uuid
 import sys
 import time
@@ -19,7 +20,7 @@ class Endpoint:
     DATA_TOPIC = "/vast/data/"
 
     """A thin wrapper around a Broker endpoint for demo purposes."""
-    def __init__(self, local_port, peer_port):
+    def __init__(self, local_port):
         # Construct and endpoint and listen to the provided port.
         self.endpoint = broker.Endpoint()
         bound_port = self.endpoint.listen("localhost", local_port)
@@ -30,8 +31,6 @@ class Endpoint:
         # Create a subscriber and register the control channel.
         log("subscribing to", self.CONTROL_TOPIC)
         self.subscriber = self.endpoint.make_subscriber(self.CONTROL_TOPIC)
-        # Peer with remote side.
-        self.peer(peer_port)
 
     def peer(self, peer_port, retry_interval=1):
         """Initiates a peering with a remote endpoint."""
@@ -47,48 +46,41 @@ class Endpoint:
 
 class Bro(Endpoint):
     def __init__(self, local_port, peer_port):
-        super().__init__(local_port, peer_port)
+        super().__init__(local_port)
+        self.peer(peer_port)
 
     def query(self, expression):
         query_id = str(uuid.uuid4())
-        control_topic = self.CONTROL_TOPIC + query_id
+        log("subscribing to data channel for query", query_id)
         data_topic = self.DATA_TOPIC + query_id
-        # Create a subscriber and publish the query.
-        log("subscribing to control and data channel for query", query_id)
-        self.subscriber.add_topic(control_topic, True)
         self.subscriber.add_topic(data_topic, True)
-        log("publishing query to", control_topic)
-        self.endpoint.publish(control_topic, expression)
+        event = broker.bro.Event("query", (query_id, expression))
+        self.endpoint.publish(self.CONTROL_TOPIC + query_id, event)
         # Wait for query results.
         log("waiting for results")
         while True:
             topic, data = self.subscriber.get()
-            log("got:", topic, data)
+            result = broker.bro.Event(data)
+            log("got:", topic, result.args())
             # Are we done?
             if topic == self.CONTROL_TOPIC + query_id + "/done":
                 break;
         # Unpublish subscriptions for this particular query.
         log("removing subscription for", query_id)
-        self.subscriber.remove_topic(control_topic, True)
         self.subscriber.remove_topic(data_topic, True)
 
     def run(self):
         self.query(":addr in 10.0.0.0/8")
 
 class VAST(Endpoint):
-    def __init__(self, local_port, peer_port):
-        super().__init__(local_port, peer_port)
+    def __init__(self, local_port):
+        super().__init__(local_port)
 
-    def dispatch_control_message(self, topic, data):
-        log("dispatching", topic, data)
-        xs = topic.split(self.CONTROL_TOPIC)
-        assert len(xs) > 1
-        query_id = uuid.UUID(xs[1])
-        self.answer_query(query_id, data)
-
-    def answer_query(self, query_id, data):
+    def lookup(self, query_id, expression):
+        log("answering query '{}'".format(expression))
         query_data_topic = self.DATA_TOPIC + str(query_id)
-        log("publishing query results to", query_data_topic)
+        # TODO: instead of responding with dummy data, interact with VAST to
+        # get the results.
         for i in range(10):
             x = broker.Data([time.ctime(),
                              [IPv4Address("10.0.0.1"),
@@ -96,16 +88,22 @@ class VAST(Endpoint):
                               broker.Port(53, broker.Port.UDP),
                               broker.Port(53, broker.Port.UDP)],
                              i])
-            self.endpoint.publish(query_data_topic, x)
+            event = broker.bro.Event("result", (query_id, x))
+            self.endpoint.publish(query_data_topic, event)
         log("completed query", query_id)
-        query_done_topic = self.CONTROL_TOPIC + str(query_id) + "/done"
-        self.endpoint.publish(query_done_topic, x)
+        event = broker.bro.Event("result", broker.Data())
+        self.endpoint.publish(query_data_topic, event)
+
+    def dispatch_control_message(self, topic, data):
+        log("deconstructing Bro event:", topic, data)
+        event = broker.bro.Event(data)
+        (query_id, expression) = event.args()
+        self.lookup(query_id, expression)
 
     def run(self):
         while True:
-            log("waiting for next message")
+            log("waiting for commands...")
             (topic, data) = self.subscriber.get()
-            log("got new message:", topic, data)
             self.dispatch_control_message(topic, data)
 
 if __name__ == "__main__":
@@ -117,7 +115,7 @@ if __name__ == "__main__":
         bro = Bro(BRO_PORT, VAST_PORT)
         bro.run()
     elif mode == "vast":
-        vast = VAST(VAST_PORT, BRO_PORT)
+        vast = VAST(VAST_PORT)
         vast.run()
     else:
         print("invalid mode:", mode)
