@@ -82,16 +82,16 @@ class VAST(Endpoint):
         # TODO: instead of responding with dummy data, interact with VAST to
         # get the results.
         for i in range(10):
-            x = broker.Data([time.ctime(),
-                             [IPv4Address("10.0.0.1"),
-                              IPv4Address("8.8.8.8"),
-                              broker.Port(53, broker.Port.UDP),
-                              broker.Port(53, broker.Port.UDP)],
-                             i])
-            event = broker.bro.Event("result", (query_id, x))
+            x = [time.ctime(),
+                 [IPv4Address("10.0.0.1"),
+                  IPv4Address("8.8.8.8"),
+                  broker.Port(53, broker.Port.UDP),
+                  broker.Port(53, broker.Port.UDP)],
+                 i]
+            event = broker.bro.Event("result", query_id, x)
             self.endpoint.publish(query_data_topic, event)
         log("completed query", query_id)
-        event = broker.bro.Event("result", broker.Data())
+        event = broker.bro.Event("result", query_id, None)
         self.endpoint.publish(query_data_topic, event)
 
     def dispatch_control_message(self, topic, data):
