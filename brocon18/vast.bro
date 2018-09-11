@@ -10,7 +10,7 @@ export {
 	const HOST = "localhost" &redef;
 
 	## The port where VAST listens.
-	const PORT = 55555/tcp &redef;
+	const PORT = 43000/tcp &redef;
 
 	## The Broker topic for the control channel.
 	const CONTROL_TOPIC = "/vast/control/";
@@ -22,37 +22,41 @@ export {
 ## The event that this script sends to VAST to create a new query.
 global query: event(id: string, expression: string);
 
-## The event that VAST sends back.
-event result(uuid: string, data: Broker::Data)
+## The event with results that VAST sends back.
+event result(uuid: string, data: any)
 	{
-	#if (|data| == 0)
-	#	{
-	#	print fmt("query %s completed", uuid);
-	#	Broker::unsubscribe(DATA_TOPIC + uuid); 
-	#	return;
-	#	}
-	print data;
+	# A valid result is a vector over data. A null value signifies that the query
+	# has terminated.
+	switch (data)
+		{
+		default:
+		  terminate(); # TODO: find a more graceful way to shutdown.
+			break;
+		case type vector of any as xs:
+			print xs;
+			break;
+		}
 	}
 
-function generate_uuid() : string
+## Generates a random 16-byte UUID.
+##
+## Returns: A random UUID, e.g., ``6ef0cb1a-f0b2-44d7-9303-6000091e35e3``.
+function random_uuid() : string
 	{
-	# TODO: figure out how to generate a random 16-byte string.
-	#local bytes = ....;
-	#return uuid_to_string(bytes);
-	return "6ef0cb1a-f0b2-44d7-9303-6000091e35e3";
+	# We use the 11 bytes of unique_id() and add a random 5-byte prefix to end up
+	# with 16 bytes for the UUID.
+	return uuid_to_string(unique_id("12345"));
 	}
 
 ## Performs a lookup of an expression in VAST. Results arrive asynchronously
 ## via the ``result`` event.
-## 
+##
 ## expresion: The query expression.
 ##
 ## Returns: The UUID of the query.
 function lookup(expression: string): string
 	{
-	local query_id = generate_uuid();
-	# Subscribe to results and then submit the query.
-	Broker::subscribe(DATA_TOPIC + query_id);
+	local query_id = random_uuid();
 	local e = Broker::make_event(query, query_id, expression);
 	Broker::publish(CONTROL_TOPIC, e);
 	return query_id;
@@ -68,8 +72,9 @@ event Broker::peer_lost(endpoint: Broker::EndpointInfo, msg: string)
 	terminate();
 	}
 
-event bro_init() 
+event bro_init()
 	{
 	Broker::subscribe(CONTROL_TOPIC);
+	Broker::subscribe(DATA_TOPIC);
 	Broker::peer(HOST, PORT);
 	}
