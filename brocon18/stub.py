@@ -42,7 +42,7 @@ class Bro:
 
     def query(self, expression):
         query_id = str(uuid.uuid4())
-        event = broker.bro.Event("query", query_id, expression)
+        event = broker.bro.Event("VAST::query", query_id, expression)
         self.endpoint.publish(CONTROL_TOPIC, event)
         log("performing lookup for", expression)
         while True:
