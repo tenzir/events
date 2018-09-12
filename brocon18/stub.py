@@ -61,21 +61,16 @@ class Bro:
 class VAST:
     def __init__(self, port):
         self.endpoint = broker.Endpoint()
-        # Create a subscriber and register control and data channel.
-        topics = [CONTROL_TOPIC, DATA_TOPIC]
-        self.subscriber = self.endpoint.make_subscriber(topics)
+        self.subscriber = self.endpoint.make_subscriber([CONTROL_TOPIC])
         self.endpoint.listen("localhost", port)
 
     def lookup(self, query_id, expression):
         log("answering query '{}'".format(expression))
-        query_data_topic = DATA_TOPIC
-        results = self.answer(expression)
-        for x in results:
-            event = broker.bro.Event("result", query_id, x)
-            self.endpoint.publish(query_data_topic, event)
-        # A null/none value signals that the query has completed.
-        event = broker.bro.Event("result", query_id, None)
-        self.endpoint.publish(query_data_topic, event)
+        name = "result"
+        make_result_event = lambda *xs: broker.bro.Event(name, query_id, *xs)
+        for x in self.answer(expression):
+            self.endpoint.publish(DATA_TOPIC, make_result_event(x))
+        self.endpoint.publish(DATA_TOPIC, make_result_event(None))
 
     def answer(self, expression):
         # We just generate dummy data here.
