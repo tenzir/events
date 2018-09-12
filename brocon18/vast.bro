@@ -13,10 +13,10 @@ export {
 	const PORT = 43000/tcp &redef;
 
 	## The Broker topic for the control channel.
-	const CONTROL_TOPIC = "/vast/control/";
+	const CONTROL_TOPIC = "/vast/control";
 
 	## The Broker topic for the data channel.
-	const DATA_TOPIC = "/vast/data/";
+	const DATA_TOPIC = "/vast/data";
 }
 
 ## The event that this script sends to VAST to create a new query.
@@ -64,6 +64,7 @@ function lookup(expression: string): string
 
 event Broker::peer_added(endpoint: Broker::EndpointInfo, msg: string)
 	{
+	print "established peering successfully";
 	lookup(":addr in 10.0.0.0/8");
 	}
 
