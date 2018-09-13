@@ -68,7 +68,7 @@ function lookup(expression: string): string
 event Broker::peer_added(endpoint: Broker::EndpointInfo, msg: string)
 	{
 	print "established peering successfully";
-	lookup(":addr in 10.0.0.0/8");
+	lookup(":addr in 192.168.1.0/24");
 	}
 
 event Broker::peer_lost(endpoint: Broker::EndpointInfo, msg: string)
