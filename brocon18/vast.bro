@@ -22,6 +22,9 @@ export {
 ## The event that this script sends to VAST to create a new query.
 global query: event(id: string, expression: string);
 
+## The event that this script sends to VAST to create a new query.
+global result: event(uuid: string, data: any);
+
 ## The event with results that VAST sends back.
 event result(uuid: string, data: any)
 	{

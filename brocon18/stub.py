@@ -66,7 +66,7 @@ class VAST:
 
     def lookup(self, query_id, expression):
         log("answering query '{}'".format(expression))
-        name = "result"
+        name = "VAST::result"
         make_result_event = lambda *xs: broker.bro.Event(name, query_id, *xs)
         for x in self.answer(expression):
             self.endpoint.publish(DATA_TOPIC, make_result_event(x))
