@@ -45,9 +45,9 @@ event result(uuid: string, data: any)
 ## Returns: A random UUID, e.g., ``6ef0cb1a-f0b2-44d7-9303-6000091e35e3``.
 function random_uuid() : string
 	{
-	# We use the 11 bytes of unique_id() and add a random 5-byte prefix to end up
+	# We use the 11 bytes of unique_id() with a fixed 5-byte prefix to end up
 	# with 16 bytes for the UUID.
-	return uuid_to_string(unique_id("12345"));
+	return uuid_to_string(unique_id("VAST-"));
 	}
 
 ## Performs a lookup of an expression in VAST. Results arrive asynchronously
