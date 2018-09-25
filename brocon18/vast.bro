@@ -22,10 +22,9 @@ export {
 ## The event that this script sends to VAST to create a new query.
 global query: event(id: string, expression: string);
 
-## The event that this script sends to VAST to create a new query.
+## The event that VAST sends back in response to a query.
 global result: event(uuid: string, data: any);
 
-## The event with results that VAST sends back.
 event result(uuid: string, data: any)
 	{
 	# A valid result is a vector over data. A null value signifies that the query
