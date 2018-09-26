@@ -114,6 +114,22 @@ instance and then makes makes Bro connect to to the bridge.
 2.  Launch the Bro-to-VAST bridge: `bro-to-vast`
 3.  Launch Bro to connect to VAST via the bridge: `bro vast.bro`
 
+There exists one caveat at the moment. All three tools rely on
+[CAF][caf] for the underlying communication. When CAF applications connect with
+each other, they perform a handshake that requires matching *application
+identifiers*. Broker sets this identifier to `broker.v<N>` where `<N>` is the
+Broker version. The `bro-to-vast` bridge uses this identifier by default, but
+VAST needs to be told to use it as well. To this end, you can simply create a
+file `vast.ini` in your working directory with the following contents:
 
+```ini
+[middleman]
+app-identifier="broker.v1"
+```
+
+This workaround will be necessary [until CAF supports a list of additional
+application identifiers](https://github.com/actor-framework/actor-framework/issues/756).
+
+[caf]: https://github.com/actor-framework/actor-framework
 [brocon18]: https://www.brocon2018.com
 [slides.pdf]: TODO
