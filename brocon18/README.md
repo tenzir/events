@@ -23,7 +23,7 @@ source $PREFIX/bin/activate
 Then, we install Broker.
 
 ```shell
-git clone git@github.com:bro/broker.git
+git clone https://github.com/bro/broker.git
 cd broker
 git submodule update --recursive --init
 ./configure \
