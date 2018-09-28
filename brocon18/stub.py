@@ -32,7 +32,7 @@ class Bro:
         # would like to receive errors as well.
         self.status_subscriber = self.endpoint.make_status_subscriber(True)
         log("peering with VAST")
-        self.endpoint.peer("localhost", port, 1.0)
+        self.endpoint.peer("127.0.0.1", port, 1.0)
         while True:
             x = self.status_subscriber.get()
             if isinstance(x, broker.Status) and x.code() == broker.SC.PeerAdded:
@@ -62,7 +62,7 @@ class VAST:
     def __init__(self, port):
         self.endpoint = broker.Endpoint()
         self.subscriber = self.endpoint.make_subscriber([CONTROL_TOPIC])
-        self.endpoint.listen("localhost", port)
+        self.endpoint.listen("127.0.0.1", port)
 
     def lookup(self, query_id, expression):
         log("answering query '{}'".format(expression))
