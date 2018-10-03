@@ -95,15 +95,15 @@ in a publish/subscribe style:
 
 This scenario mocks VAST and Bro with two Python scripts.
 
-1. Launch the VAST stub: `./stub.py vast`
-2. Launch the Bro stub: `./stub.py bro`
+1. Launch the VAST stub: `./stub vast`
+2. Launch the Bro stub: `./stub bro`
 
 
 ### Example 2: Bro <-> Stub
 
 This scenario mocks VAST with a Python script and makes Bro connect to it.
 
-1.  Launch the VAST stub: `./stub.py vast`
+1.  Launch the VAST stub: `./stub vast`
 2.  Launch Bro to connect to the stub: `bro vast.bro`
 
 For (2) to work, you must have a `bro` binary from the current master branch in
