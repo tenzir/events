@@ -1,4 +1,4 @@
-[submodule "brocon18/evaluation/broker"]
-	path = brocon18/evaluation/broker
+[submodule "brocon18/broker"]
+	path = brocon18/broker
 	url = https://github.com/bro/broker.git
 	branch = topic/broker-node

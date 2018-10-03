@@ -23,9 +23,8 @@ source $PREFIX/bin/activate
 Then, we install Broker.
 
 ```shell
-git clone https://github.com/bro/broker.git
-cd broker
 git submodule update --recursive --init
+cd broker
 ./configure \
   --generator=Ninja \
   --prefix=$PREFIX \

@@ -1,5 +1,4 @@
 *.sw?
-brocon18/broker
 brocon18/env
 # Bro state
 brocon18/.state
