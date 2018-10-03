@@ -3,7 +3,7 @@
 function launch_ping() {
   peer=$1
   num_relays=$2
-  for payload in 0 1 10 100 1000 10000 100000 1000000; do
+  for payload in 0 1 10 100 1000 10000 100000 1000000 10000000 100000000; do
     echo "start ping for $num_relays relays with payload $payload connecting to peer $peer"
     out=$(../build/release/bin/broker-node ${verbose:+'-v'} -N "ping" -p "[<tcp://[::1]:$peer>]" -t foobar -m "'ping'" -n ${iterations} -s $payload)
     while read -r line; do
