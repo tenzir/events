@@ -5,7 +5,7 @@ function launch_ping() {
   num_relays=$2
   for payload in 0 1 10 100 1000 10000 100000 1000000 10000000 100000000; do
     echo "start ping for $num_relays relays with payload $payload connecting to peer $peer"
-    out=$(../build/release/bin/broker-node ${verbose:+'-v'} -N "ping" -p "[<tcp://[::1]:$peer>]" -t foobar -m "'ping'" -n ${iterations} -s $payload)
+    out=$($broker_node ${verbose:+'-v'} -N "ping" -p "[<tcp://[::1]:$peer>]" -t foobar -m "'ping'" -n ${iterations} -s $payload)
     while read -r line; do
       echo "$num_relays,$payload,$line" >> latency.csv
     done <<< "$out"
@@ -16,13 +16,13 @@ function launch_relay() {
   listen=$1
   peer=$2
   echo "start relay ${listen} <-> ${peer}" 1>&2
-  ../build/release/bin/broker-node -N "relay_${listen}" ${verbose:+'-v'} -l ${listen} -t foobar -m "'relay'" -p "[<tcp://[::1]:${peer}>]" &
+  $broker_node -N "relay_${listen}" ${verbose:+'-v'} -l ${listen} -t foobar -m "'relay'" -p "[<tcp://[::1]:${peer}>]" &
 }
 
 function launch_pong() {
   listen=$1
   echo "start pong at port ${listen}" 1>&2
-  ../build/release/bin/broker-node -N "pong" ${verbose:+'-v'} -l ${listen} -t foobar -m "'pong'" & 2> pong.log
+  $broker_node -N "pong" ${verbose:+'-v'} -l ${listen} -t foobar -m "'pong'" & 2> pong.log
 }
 
 function run_test() {
@@ -44,6 +44,7 @@ USAGE="usage: $0 [options] <min-num-relays> <max-num-relays>"
 
 unset verbose
 unset help_
+broker_node=../../broker/build/bin/broker-node
 append=false
 port=4001
 iterations=100
