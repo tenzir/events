@@ -32,7 +32,7 @@ event result(uuid: string, data: any)
   switch (data)
     {
     default:
-      terminate(); # TODO: find a more graceful way to shutdown.
+      terminate();
       break;
     case type vector of any as xs:
       print xs;
