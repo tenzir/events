@@ -25,14 +25,19 @@ Then, we install Broker.
 ```shell
 git submodule update --recursive --init
 cd broker
+# The next two steps won't be necessary soon when Broker has the new CAF.
+cd 3rdparty/caf
+git checkout master
+cd -
 ./configure \
   --generator=Ninja \
+  --build-type=Release \
   --prefix=$PREFIX \
   --with-python=$PREFIX/bin/python
 cd build
 ninja
 ninja install
-cd ..
+cd ../..
 ```
 
 Finally, we make sure that we find the Broker Python modules without setting
@@ -43,7 +48,7 @@ site_packages=$(python -c "import site; print(site.getsitepackages()[0])")
 cp sitecustomize.py $site_packages
 ```
 
-## Scenario
+### Scenario
 
 The demo illustrates a scenario where Bro asks VAST for historical data via
 Broker. For ease of exposition, we first model both applications as "stubs" via
@@ -128,6 +133,10 @@ app-identifier="broker.v1"
 
 This workaround will be necessary [until CAF supports a list of additional
 application identifiers](https://github.com/actor-framework/actor-framework/issues/756).
+
+## Evaluation
+
+TODO
 
 [caf]: https://github.com/actor-framework/actor-framework
 [brocon18]: https://www.brocon2018.com
