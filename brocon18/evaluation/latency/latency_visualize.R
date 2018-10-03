@@ -1,0 +1,6 @@
+library(ggplot2)
+data <- read.csv("latency.csv")
+ggplot(data, aes(relays, rtt/1000000, group=relays))
+  + geom_boxplot()
+  + facet_wrap(~ payload, labeller=label_both)
+ggsave("latency.png", width=6, height=4, type="cairo")
