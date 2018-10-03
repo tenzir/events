@@ -7,7 +7,7 @@ module VAST;
 
 export {
   ## The hostname or address where VAST runs.
-  const host = "localhost" &redef;
+  const host = "127.0.0.1" &redef;
 
   ## The port where VAST listens.
   const tcp_port = 43000/tcp &redef;
