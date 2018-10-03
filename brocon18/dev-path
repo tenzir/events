@@ -1,0 +1,18 @@
+#!/bin/sh
+#
+# A small helper script to adjust the $PATH environment variable for easy
+# integration of local Bro and VAST builds.
+
+if [ -z "$1" ]; then
+  echo "usage: $0 <prefix>"
+  echo ""
+  echo "assumes local builds of VAST and Bro in directory <prefix> and adjusts \$PATH path"
+fi
+
+# The local path containing Bro and VAST builds.
+prefix="$1"
+
+if [ -d "$prefix" ]; then
+  echo export PATH=\"$prefix/vast/build/bin:$prefix/bro/build/src:\$PATH\"
+  echo export BROPATH=\"$($prefix/bro/build/bro-path-dev)\"
+fi

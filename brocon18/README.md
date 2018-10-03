@@ -48,6 +48,15 @@ site_packages=$(python -c "import site; print(site.getsitepackages()[0])")
 cp sitecustomize.py $site_packages
 ```
 
+For convenience, we provide a little script that adjust environment variables
+such that Bro and VAST do not require prefixing/aliasing:
+
+```shell
+eval `./dev-path path/to/code`
+```
+
+Here, `path/to/code` is the directory with local builds of VAST and Bro.
+
 ### Scenario
 
 The demo illustrates a scenario where Bro asks VAST for historical data via
