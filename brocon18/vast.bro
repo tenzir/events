@@ -7,17 +7,17 @@ module VAST;
 
 export {
   ## The hostname or address where VAST runs.
-  const HOST = "localhost" &redef;
+  const host = "localhost" &redef;
 
   ## The port where VAST listens.
-  const PORT = 43000/tcp &redef;
-
-  ## The Broker topic for the control channel.
-  const CONTROL_TOPIC = "/vast/control";
-
-  ## The Broker topic for the data channel.
-  const DATA_TOPIC = "/vast/data";
+  const tcp_port = 43000/tcp &redef;
 }
+
+## The Broker topic for the control channel.
+const control_topic = "/vast/control";
+
+## The Broker topic for the data channel.
+const data_topic = "/vast/data";
 
 ## The event that this script sends to VAST to create a new query.
 global query: event(id: string, expression: string);
@@ -68,24 +68,27 @@ function lookup(expression: string): string
   {
   local query_id = random_uuid();
   local e = Broker::make_event(query, query_id, expression);
-  Broker::publish(CONTROL_TOPIC, e);
+  Broker::publish(control_topic, e);
   return query_id;
   }
 
+# Executes when a Broker endpoint connects.
 event Broker::peer_added(endpoint: Broker::EndpointInfo, msg: string)
   {
   print "established peering successfully";
   lookup(":addr in 192.168.1.0/24");
   }
 
+# Executes when a Broker endpoint disconnects.
 event Broker::peer_lost(endpoint: Broker::EndpointInfo, msg: string)
   {
   terminate();
   }
 
+# Executes once when a Bro starts up.
 event bro_init()
   {
-  Broker::subscribe(CONTROL_TOPIC);
-  Broker::subscribe(DATA_TOPIC);
-  Broker::peer(HOST, PORT);
+  Broker::subscribe(control_topic);
+  Broker::subscribe(data_topic);
+  Broker::peer(host, tcp_port);
   }
