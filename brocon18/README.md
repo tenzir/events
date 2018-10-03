@@ -114,9 +114,40 @@ your `PATH`.
 This scenario uses the `bro-to-vast` bridge to connect to a running VAST
 instance and then makes makes Bro connect to to the bridge.
 
-1.  Launch VAST: `vast start`
-2.  Launch the Bro-to-VAST bridge: `bro-to-vast`
-3.  Launch Bro to connect to VAST via the bridge: `bro vast.bro`
+First, we import some data into an actual VAST instance:
+
+```shell
+# Start VAST
+vast start
+
+# Download a PCAP trace.
+wget http://downloads.digitalcorpora.org/corpora/scenarios/2009-m57-patents/net/net-2009-11-18-10:32.pcap.gz -o trace.pcap.gz
+
+# Create Bro logs from the trace
+mkdir bro
+cd bro
+zcat ../trace.pcap | bro -C -r -
+cd ..
+
+# Import the trace and Bro logs.
+zcat trace.pcap | vast import pcap
+cat bro/*.log | vast import bro
+
+# Sanity check that we can perform queries:
+vast export ascii 'id.orig_h == 192.168.1.1'
+```
+
+Second, we start the VAST bridge that connects to VAST:
+
+```
+bro-to-vast
+```
+
+Third, we launch Bro to connect to the VAST bridge:
+
+```
+bro vast.bro
+```
 
 There exists one caveat at the moment. All three tools rely on
 [CAF][caf] for the underlying communication. When CAF applications connect with

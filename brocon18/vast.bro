@@ -76,7 +76,7 @@ function lookup(expression: string): string
 event Broker::peer_added(endpoint: Broker::EndpointInfo, msg: string)
   {
   print "established peering successfully";
-  lookup(":addr in 192.168.1.0/24");
+  lookup("id.orig_h == 192.168.1.1");
   }
 
 # Executes when a Broker endpoint disconnects.
