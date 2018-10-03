@@ -171,8 +171,9 @@ file `vast.ini` in your working directory with the following contents:
 app-identifier="broker.v1"
 ```
 
-This workaround will be necessary [until CAF supports a list of additional
-application identifiers](https://github.com/actor-framework/actor-framework/issues/756).
+This repository comes with such a [vast.ini](vast.ini) already. This workaround
+will be necessary [until CAF supports a list of additional application
+identifiers](https://github.com/actor-framework/actor-framework/issues/756).
 
 ## Evaluation
 
