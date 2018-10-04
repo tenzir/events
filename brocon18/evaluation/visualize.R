@@ -39,9 +39,9 @@ plot_throughput <- function(data) {
     ylab("Throughput (messages/sec)")
 }
 
-save_plot <- function(plot, filename) {
+save_plot <- function(plot, filename, height = 9, width = 16) {
   write(paste("-- generating", filename), stderr())
-  ggsave(plot, filename = filename, height=9, width=16)
+  ggsave(plot, filename = filename, height = height, width = width)
 }
 
 # -- main function -------------------------------------------------------------
