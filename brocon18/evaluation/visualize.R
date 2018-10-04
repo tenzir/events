@@ -5,12 +5,7 @@ suppressPackageStartupMessages(library(ggplot2))
 suppressPackageStartupMessages(library(scales))
 suppressPackageStartupMessages(library(tidyr))
 
-# -- global constants ----------------------------------------------------------
-
-payload_levels <- as.integer(c(0, 10^(0:9)))
-payload_labels <- c("0", "1", "10", "100", "1 KB", "10 KB", "100 KB", "1 MB",
-                    "10 MB", "100 MB", "1 GB")
-payload_length <- length(payload_levels)
+# -- plot functions ------------------------------------------------------------
 
 payload_palette <- function(g) {
   d <- 360 / g
@@ -18,29 +13,19 @@ payload_palette <- function(g) {
   hcl(h = h, c = 100, l = 65)
 }
 
-payload_colors <- payload_palette(payload_length)
-
-# Converts a sequence of integers into a factor whose levels and labels are
-# formatted such that they can be used in ggplot functions conveniently.
-as.payload <- function(x) {
-  factor(x, levels = payload_levels, labels = payload_labels)
-}
-
-# -- plot functions ------------------------------------------------------------
-
 # Plots data as a function of number of relays. Each line represents a
 # different payload.
 plot_data <- function(data, y) {
   ggplot(data, aes_(x = quote(factor(relays)), y = as.name(y),
-                    shape = quote(as.payload(payload)),
-                    group = quote(as.payload(payload)),
-                    color = quote(as.payload(payload)))) +
+                    shape = quote(payload),
+                    group = quote(payload),
+                    color = quote(payload))) +
     geom_line() +
     geom_point() +
     xlab("Relays") +
     labs(group = "Payload", color = "Payload", shape = "Payload") +
-    scale_color_manual(values = payload_colors) +
-    scale_shape_manual(values=seq(0, payload_length)) +
+    scale_color_manual(values = payload_palette(length(levels(data$payload)))) +
+    scale_shape_manual(values = seq(0, length(data$payload))) +
     scale_y_continuous(breaks = pretty_breaks(10), labels = comma)
 }
 
@@ -61,12 +46,23 @@ save_plot <- function(plot, filename) {
 
 # -- main function -------------------------------------------------------------
 
+read_data <- function(filename) {
+  payload_levels <- as.integer(c(0, 10^(0:9)))
+  payload_labels <- c("0", "1", "10", "100", "1 KB", "10 KB", "100 KB", "1 MB",
+                      "10 MB", "100 MB", "1 GB")
+  as.payload <- function(x) {
+    factor(x, levels = payload_levels, labels = payload_labels)
+  }
+  read.csv(filename) %>%
+    mutate(relays = factor(relays), payload = as.payload(payload))
+}
+
 main <- function(args) {
   # Use a reasonable base font size.
   theme_set(theme_bw(base_size = 20))
   # Go through all files and plot the graphs.
   for (file in args) {
-    data <- read.csv(file)
+    data <- read_data(file)
     # Infer whether we're dealing with latency or throughput data.
     mode <- "unknown"
     if ("rtt" %in% colnames(data))
