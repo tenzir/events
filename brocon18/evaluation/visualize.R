@@ -39,6 +39,15 @@ plot_throughput <- function(data) {
     ylab("Throughput (messages/sec)")
 }
 
+plot_throughput_boxplots <- function(data) {
+  ggplot(data, aes(payload, messages, color = payload)) +
+    geom_boxplot() +
+    scale_y_continuous(breaks = pretty_breaks(5), labels = comma) +
+    labs(x = "Payload size", y = "Throughput (messages/sec)") +
+    ggtitle("Throuput Distribution by Relay Count") +
+    facet_wrap(. ~ relays)
+}
+
 save_plot <- function(plot, filename, height = 9, width = 16) {
   write(paste("-- generating", filename), stderr())
   ggsave(plot, filename = filename, height = height, width = width)
