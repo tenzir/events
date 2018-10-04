@@ -20,48 +20,87 @@ payload_palette <- function(g) {
 
 payload_colors <- payload_palette(payload_length)
 
+# Converts a sequence of integers into a factor whose levels and labels are
+# formatted such that they can be used in ggplot functions conveniently.
 as.payload <- function(x) {
   factor(x, levels = payload_levels, labels = payload_labels)
 }
 
 # -- plot functions ------------------------------------------------------------
 
-# Plots latency as a function of number of relays.
-plot_latency <- function(data) {
-  ggplot(data, aes(x = factor(relays), y = rtt,
-                   shape = as.payload(payload),
-                   group = as.payload(payload),
-                   color = as.payload(payload))) +
+# Plots data as a function of number of relays. Each line represents a
+# different payload.
+plot_data <- function(data, y) {
+  ggplot(data, aes_(x = quote(factor(relays)), y = as.name(y),
+                    shape = quote(as.payload(payload)),
+                    group = quote(as.payload(payload)),
+                    color = quote(as.payload(payload)))) +
     geom_line() +
     geom_point() +
     xlab("Relays") +
-    labs(x = "Relays", group = "Payload", color = "Payload",
-         shape = "Payload") +
+    labs(group = "Payload", color = "Payload", shape = "Payload") +
     scale_color_manual(values = payload_colors) +
     scale_shape_manual(values=seq(0, payload_length)) +
-    scale_y_continuous(name = "RTT (ms)", breaks = pretty_breaks(10),
-                       labels = comma)
+    scale_y_continuous(breaks = pretty_breaks(10), labels = comma)
 }
 
-# -- main functions ------------------------------------------------------------
+plot_latency <- function(data) {
+  plot_data(data, "rtt") +
+    ylab("RTT (ms)")
+}
+
+plot_throughput <- function(data) {
+  plot_data(data, "throughput") +
+    ylab("Throughput (messages/sec)")
+}
+
+save_plot <- function(plot, filename) {
+  write(paste("-- generating", filename), stderr())
+  ggsave(plot, filename = filename, height=9, width=16)
+}
+
+# -- main function -------------------------------------------------------------
 
 main <- function(args) {
   # Use a reasonable base font size.
   theme_set(theme_bw(base_size = 20))
-
   # Go through all files and plot the graphs.
   for (file in args) {
-    data <- read.csv(file) %>%
-      group_by(relays, payload) %>%
-      summarize(rtt = median(rtt / 1e6))
-    for (max_payload in 10^(6:8)) {
-      filename <- paste(tools::file_path_sans_ext(file), max_payload, "pdf",
-                        sep = ".")
-      write(paste("-- generating", filename), stderr())
+    data <- read.csv(file)
+    # Infer whether we're dealing with latency or throughput data.
+    mode <- "unknown"
+    if ("rtt" %in% colnames(data))
+      mode <- "latency"
+    else if ("messages" %in% colnames(data))
+      mode <- "throughput"
+    if (mode == "unknown")
+       stop("invalid data columns: need 'relays,payload,(rtt|messages)'")
+    if (mode == "latency") {
+      # Plot 3 different graphs for latency because the y-axis changes by
+      # several order of magnitudes. We don't want to use a log-linear plot
+      # because it's more difficult to compare the various payload sizes
+      # visually.
       data %>%
-        filter(payload <= max_payload) %>%
-        plot_latency %>%
-        ggsave(filename = filename, height=9, width=16)
+        group_by(relays, payload) %>%
+        summarize(rtt = median(rtt / 1e6))
+      for (max_payload in 10^(6:8)) {
+        filename <- paste(tools::file_path_sans_ext(file), max_payload, "pdf",
+                          sep = ".")
+        write(paste("-- generating", filename), stderr())
+        data %>%
+          filter(payload <= max_payload) %>%
+          plot_latency() %>%
+          save_plot(filename)
+      }
+    } else if (mode == "throughput") {
+      # Plot a single graph for throughput because larger payloads don't change
+      # the picture.
+      filename <- paste(tools::file_path_sans_ext(file), "pdf", sep = ".")
+      data %>%
+        group_by(relays, payload) %>%
+        summarize(throughput = median(messages)) %>%
+        plot_throughput() %>%
+        save_plot(filename)
     }
   }
 }
