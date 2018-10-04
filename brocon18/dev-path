@@ -4,15 +4,38 @@
 # integration of local Bro and VAST builds.
 
 if [ -z "$1" ]; then
-  echo "usage: $0 <prefix>"
+  echo "usage: $0 [<dir> ...]"
   echo ""
-  echo "assumes local builds of VAST and Bro in directory <prefix> and adjusts \$PATH path"
+  echo "Looks for local builds of VAST and Bro in the directories."
+  echo "To update your shell environment, you can use, e.g.:"
+  echo
+  echo "    eval \$($0 x y z)"
+  echo 
+  exit 1
 fi
 
-# The local path containing Bro and VAST builds.
-prefix="$1"
+# Process arguments.
+for dir in "$@"; do
+  if [ -d "$dir" ]; then
+    # Add VAST path.
+    if [ -d "$dir/vast/build" ]; then
+      PATH="$dir/vast/build/bin:$PATH"
+    fi
+    # Add Bro path.
+    if [ -d "$dir/bro/build" ]; then
+      echo export BROPATH=\"$($dir/bro/build/bro-path-dev)\"
+    fi
+  fi
+done
 
-if [ -d "$prefix" ]; then
-  echo export PATH=\"$prefix/vast/build/bin:$prefix/bro/build/src:\$PATH\"
-  echo export BROPATH=\"$($prefix/bro/build/bro-path-dev)\"
+# Check for local virtual Python env.
+if [ -d "$(pwd)/env/bin" ]; then
+  PATH="$(pwd)/env/bin:$PATH"
 fi
+
+# Check for local Broker build
+if [ -d "$(pwd)/broker/build" ]; then
+  PATH="$(pwd)/broker/build/bin:$PATH"
+fi
+
+echo export PATH=\"$PATH\"
