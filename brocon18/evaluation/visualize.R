@@ -51,29 +51,17 @@ main <- function(args) {
 
   # Go through all files and plot the graphs.
   for (file in args) {
-    data <- read.csv(file)
-    mode <- "unknown"
-    if ("rtt" %in% colnames(data)
-      mode <- "latency"
-    else if ("throughput" %in% colnames(data))
-      mode <- "throughput"
-    if (mode == "unknown")
-       stop("invalid data columns: need 'relays,payload,(rtt|throughput)'")
-    if (mode == "latency") {
+    data <- read.csv(file) %>%
+      group_by(relays, payload) %>%
+      summarize(rtt = median(rtt / 1e6))
+    for (max_payload in 10^(6:8)) {
+      filename <- paste(tools::file_path_sans_ext(file), max_payload, "pdf",
+                        sep = ".")
+      write(paste("-- generating", filename), stderr())
       data %>%
-        group_by(relays, payload) %>%
-        summarize(rtt = median(rtt / 1e6))
-      for (max_payload in 10^(6:8)) {
-        filename <- paste(tools::file_path_sans_ext(file), max_payload, "pdf",
-                          sep = ".")
-        write(paste("-- generating", filename), stderr())
-        data %>%
-          filter(payload <= max_payload) %>%
-          plot_latency %>%
-          ggsave(filename = filename, height=9, width=16)
-      }
-    } else if (mode == "throughput") {
-      stop("not yet implemented")
+        filter(payload <= max_payload) %>%
+        plot_latency %>%
+        ggsave(filename = filename, height=9, width=16)
     }
   }
 }
