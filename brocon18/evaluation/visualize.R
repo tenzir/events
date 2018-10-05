@@ -92,7 +92,7 @@ main <- function(args) {
         filename <- paste(tools::file_path_sans_ext(file), max_payload, "pdf",
                           sep = ".")
         data %>%
-          filter(payload <= max_payload) %>%
+          filter(as.integer(payload) <= max_payload) %>%
           plot_latency() %>%
           save_plot(filename)
       }
