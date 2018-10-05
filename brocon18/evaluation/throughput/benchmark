@@ -10,7 +10,7 @@ function launch_relay() {
   listen=$1
   peer=$2
   echo "start relay ${listen} <-> ${peer}" 1>&2
-  $broker_node -N "relay_${listen}" ${verbose:+'-v'} -l ${listen} -t '/bench/throughput' -m "relay" -p "[<tcp://[127.0.0.1]:${peer}>]" &
+  broker-node -N "relay_${listen}" ${verbose:+'-v'} -l ${listen} -t '/bench/throughput' -m "relay" -p "[<tcp://[127.0.0.1]:${peer}>]" &
 }
 
 function launch_subscriber {
@@ -18,14 +18,14 @@ function launch_subscriber {
   num_relays=$2
   bytes=$3
   echo "start subscriber at ${listen}" 1>&2
-  $broker_pipe -l ${listen} -t '/bench/throughput' --mode="subscribe" --impl="blocking" --rate | xargs -i echo "$num_relays,$payload,{}" >> throughput.csv &
+  broker-pipe -l ${listen} -t '/bench/throughput' --mode="subscribe" --impl="blocking" --rate | xargs -i echo "$num_relays,$payload,{}" >> throughput.csv &
 }
 
 function launch_publisher {
   peer=$1
   bytes=$2
   echo "start publisher connecting to ${peer}, sending ${bytes} bytes per message indefinitely" 1>&2
-  ./generate ${bytes} | $broker_pipe --peers="[\"127.0.0.1:${peer}\"]" -t '/bench/throughput' --mode="publish" --impl="blocking" &
+  ./generate ${bytes} | broker-pipe --peers="[\"127.0.0.1:${peer}\"]" -t '/bench/throughput' --mode="publish" --impl="blocking" &
 }
 
 function bench() {
@@ -50,8 +50,6 @@ USAGE="usage: $0 [options] <min-num-relays> <max-num-relays>"
 
 unset verbose
 unset help_
-broker_node=../../broker/build/bin/broker-node
-broker_pipe=../../broker/build/bin/broker-pipe
 append=false
 port=4001
 iterations=100
@@ -71,6 +69,16 @@ shift $((OPTIND-1))
 if [ "$help_" = true ] || [ "$#" -lt 2 ]; then
   echo $USAGE
   exit $ret;
+fi
+
+if ! which broker-node > /dev/null 2>&1; then
+  echo 'broker-node not found in $PATH'
+  exit 1
+fi
+
+if ! which broker-pipe > /dev/null 2>&1; then
+  echo 'broker-pipe not found in $PATH'
+  exit 1
 fi
 
 if [ "$append" = false ]; then
