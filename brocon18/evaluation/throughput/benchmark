@@ -18,7 +18,7 @@ function launch_subscriber {
   num_relays=$2
   bytes=$3
   echo "start subscriber at ${listen}" 1>&2
-  broker-pipe -l ${listen} -t '/bench/throughput' --mode="subscribe" --impl="blocking" --rate | xargs -i echo "$num_relays,$payload,{}" >> throughput.csv &
+  broker-pipe -l ${listen} -t '/bench/throughput' --mode="subscribe" --impl="blocking" --rate | awk -v n=$num_relays -v p=$payload '{ print n "," p "," $1 }' >> throughput.csv &
 }
 
 function launch_publisher {
