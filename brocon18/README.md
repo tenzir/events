@@ -3,11 +3,6 @@
 This repository contains code and slides from our presentation at [BroCon
 2018][brocon18].
 
-
-## Slides
-
-Our slides are available for [download as PDF][slides.pdf].
-
 ## Demo
 
 In the demo, we use Python 3 in conjunction with
@@ -181,4 +176,3 @@ TODO
 
 [caf]: https://github.com/actor-framework/actor-framework
 [brocon18]: https://www.brocon2018.com
-[slides.pdf]: TODO
