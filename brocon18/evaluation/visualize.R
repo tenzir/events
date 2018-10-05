@@ -16,6 +16,9 @@ payload_palette <- function(g) {
 # Plots data as a function of number of relays. Each line represents a
 # different payload.
 plot_data <- function(data, y) {
+  si_labels <- c("0", "1", "10", "100", "1 KB", "10 KB", "100 KB", "1 MB",
+                 "10 MB", "100 MB", "1 GB")
+  stopifnot(length(si_labels) >= length(levels(data$payload)))
   ggplot(data, aes_(x = quote(factor(relays)), y = as.name(y),
                     shape = quote(payload),
                     group = quote(payload),
@@ -24,8 +27,10 @@ plot_data <- function(data, y) {
     geom_point() +
     xlab("Relays") +
     labs(group = "Payload", color = "Payload", shape = "Payload") +
-    scale_color_manual(values = payload_palette(length(levels(data$payload)))) +
-    scale_shape_manual(values = seq(0, length(data$payload))) +
+    scale_color_manual(values = payload_palette(length(si_labels)),
+                       labels = si_labels) +
+    scale_shape_manual(values = seq(0, length(levels(data$payload))),
+                       labels = si_labels) +
     scale_y_continuous(breaks = pretty_breaks(10), labels = comma)
 }
 
@@ -56,14 +61,8 @@ save_plot <- function(plot, filename, height = 9, width = 16) {
 # -- main function -------------------------------------------------------------
 
 read_data <- function(filename) {
-  payload_levels <- as.integer(c(0, 10^(0:9)))
-  payload_labels <- c("0", "1", "10", "100", "1 KB", "10 KB", "100 KB", "1 MB",
-                      "10 MB", "100 MB", "1 GB")
-  as.payload <- function(x) {
-    factor(x, levels = payload_levels, labels = payload_labels)
-  }
   read.csv(filename) %>%
-    mutate(relays = factor(relays), payload = as.payload(payload))
+    mutate(relays = factor(relays), payload = factor(payload))
 }
 
 main <- function(args) {
@@ -85,14 +84,14 @@ main <- function(args) {
       # several order of magnitudes. We don't want to use a log-linear plot
       # because it's more difficult to compare the various payload sizes
       # visually.
-      data %>%
+      data <- data %>%
         group_by(relays, payload) %>%
         summarize(rtt = median(rtt / 1e6))
       for (max_payload in 10^(6:8)) {
         filename <- paste(tools::file_path_sans_ext(file), max_payload, "pdf",
                           sep = ".")
         data %>%
-          filter(as.integer(payload) <= max_payload) %>%
+          filter(as.numeric(levels(payload))[payload] <= max_payload) %>%
           plot_latency() %>%
           save_plot(filename)
       }
