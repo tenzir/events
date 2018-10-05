@@ -172,7 +172,86 @@ identifiers](https://github.com/actor-framework/actor-framework/issues/756).
 
 ## Evaluation
 
-TODO
+Our data and tools for analyzing Broker performance are located in the
+[evaluation](evaluation) directory. Our analysis is twofold: we look at latency
+and throughput.
+
+### Latency
+
+We measure latency as round-trip time (RTT) in a ping-pong scenario between peered
+endpoints in separate processes. One process publishes a *ping* message to which
+another process responds with a *pong* message. One RTT is time is the
+difference between the arrival time of the pong message and the sent time of
+the ping message.
+
+To better understand how latency changes with a large number of nodes, we also
+add *relay* nodes in the middle. They only forward every message to the next
+node. This diagram illustrates the setup:
+
+```
+      ping node  <-->  relay node  <-->  ...  <--> relay node  <-->  pong node
+```
+
+In our demo, we vary the number of relay nodes from 0 to 10. To generate test
+data, invoke the latency script as follows:
+
+```shell
+cd evaluation/latency
+./benchmark 0 10
+```
+
+The two arguments to `benchmark` determine the minimum and maximum number of
+relays to include. The script generates a file `latency.csv`. The
+[latency](evaluation/latency) directory includes runs from the following
+machines:
+
+- macOS Mojave 10.14, iMac 18,3, Intel i7-7700K (8) @ 4.20GHz, 16 GiB RAM
+- TODO
+
+We also wrote an [R script](evaluation/visualize.R) that visualize the
+generated data. It takes one or more latency files as input and generates PDFs
+in the same directory of the latency file:
+
+```shell
+cd evaluation
+./visualize.R latency/imac-18-3-mojave.csv
+```
+
+### Throughput
+
+We measure throughput in a similar way as latency: instead of using ping and
+pong nodes we use `broker-pipe`, a small message generator that acts as
+publisher or subscriber:
+
+```
+     broker-pipe   -->  relay node   -->  ...   --> relay node   -->  broker-pipe
+```
+
+We build a pipeline between a `broker-pipe` publisher and subscriber, with a
+varying number of relays in the middle. We patc
+
+
+```shell
+cd evaluation/throughput
+./benchmark 0 10
+```
+
+As for the latency evaluation, the two arguments to `benchmark` determine the
+minimum and maximum number of relays to include. The script generates a file
+`throughput.csv`. The [throughput](evaluation/throughput) directory includes runs
+from the following
+machines:
+
+- macOS Mojave 10.14, iMac 18,3, Intel i7-7700K (8) @ 4.20GHz, 16 GiB RAM
+- TODO
+
+Our [R script](evaluation/visualize.R) also understands the throughput CSV
+files and generates plots accordingly:
+
+```shell
+cd evaluation
+./visualize.R throughput/imac-18-3-mojave.csv
+```
 
 [caf]: https://github.com/actor-framework/actor-framework
 [brocon18]: https://www.brocon2018.com
