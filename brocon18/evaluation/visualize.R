@@ -91,7 +91,6 @@ main <- function(args) {
       for (max_payload in 10^(6:8)) {
         filename <- paste(tools::file_path_sans_ext(file), max_payload, "pdf",
                           sep = ".")
-        write(paste("-- generating", filename), stderr())
         data %>%
           filter(payload <= max_payload) %>%
           plot_latency() %>%
