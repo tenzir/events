@@ -230,8 +230,17 @@ publisher or subscriber:
 ```
 
 We build a pipeline between a `broker-pipe` publisher and subscriber, with a
-varying number of relays in the middle. We patc
+varying number of relays in the middle. We patched `broker-pipe` to print rate
+information instead payload data. You need this patch to run our benchmarks:
 
+```shell
+cd broker
+git apply ../throughput.patch
+cd build
+ninja && ninja install
+```
+
+Thereafter, you can run the throughput measurements as follows:
 
 ```shell
 cd evaluation/throughput
