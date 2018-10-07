@@ -1,0 +1,23 @@
+2018-10-07 15:10:57
+Running ./main
+Run on (64 X 2300.11 MHz CPU s)
+CPU Caches:
+  L1 Data 16K (x64)
+  L1 Instruction 64K (x32)
+  L2 Unified 2048K (x32)
+  L3 Unified 6144K (x8)
+-----------------------------------------------------------------------
+Benchmark                                Time           CPU Iterations
+-----------------------------------------------------------------------
+core_fixture<msg>/ValueTest/1   1165587516 ns      83303 ns         10
+core_fixture<msg>/ValueTest/2   1270507169 ns      82971 ns         10
+core_fixture<msg>/ValueTest/3   1443014906 ns      94333 ns         10
+core_fixture<msg>/ValueTest/4   1737882498 ns     111585 ns         10
+core_fixture<msg>/ValueTest/5   2067002479 ns     123798 ns         10
+core_fixture<cow_msg>/CowTest/1 1022308096 ns      75458 ns         10
+core_fixture<cow_msg>/CowTest/2 1007475469 ns      83038 ns         10
+core_fixture<cow_msg>/CowTest/3 1010414215 ns      88174 ns         10
+core_fixture<cow_msg>/CowTest/4  994411015 ns      90417 ns         10
+core_fixture<cow_msg>/CowTest/5  986470504 ns      90530 ns         10
+fixture/SerializeRaw                  3315 ns       3314 ns     214742
+fixture/SerializeBlob                 2245 ns       2245 ns     312278
