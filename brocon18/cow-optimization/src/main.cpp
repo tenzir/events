@@ -2,6 +2,14 @@
 
 #include <benchmark/benchmark.h>
 
+using msg = std::pair<std::string, caf::config_value>;
+
+using cow_msg = std::shared_ptr<msg>;
+
+CAF_ALLOW_UNSAFE_MESSAGE_TYPE(cow_msg)
+
+CAF_ALLOW_UNSAFE_MESSAGE_TYPE(std::vector<cow_msg>)
+
 namespace {
 
 using std::string;
@@ -16,7 +24,7 @@ using dc = cv::dictionary;
 using data = cv;
 using topic = string;
 
-constexpr size_t num_messages = 10000;
+constexpr size_t num_messages = 100000;
 
 cv make_data() {
   return cv{
@@ -28,83 +36,58 @@ cv make_data() {
             "messages, network transparent messaging, and more."}}};
 }
 
-using msg = std::pair<string, data>;
+template <class T>
+T generate();
 
-void source(event_based_actor* self, vector<actor> snks) {
+template <>
+msg generate<msg>() {
+  return msg{"programming", make_data()};
+}
+
+template <>
+cow_msg generate<cow_msg>() {
+  return std::make_shared<msg>("programming", make_data());
+}
+
+struct source_state {
+  const char* name = "source";
+};
+
+template <class T>
+void source(stateful_actor<source_state>* self, vector<actor> snks) {
   auto mgr = self->make_source(
     snks.front(),
     [](size_t& n) {
       n = 0;
     },
-    [](size_t& n, downstream<msg>& out, size_t hint) {
+    [](size_t& n, downstream<T>& out, size_t hint) {
       auto num = std::min(num_messages - n, hint);
       for (size_t i = 0; i < num; ++i)
-        out.push(msg{"programming", make_data()});
+        out.push(generate<T>());
       n += num;
     },
     [](const size_t& n) {
       return n == num_messages;
     }
   ).ptr();
-  snks.erase(snks.begin());
-  for (auto& snk : snks)
-    mgr->add_unchecked_outbound_path<msg>(snk);
+  for (auto i = snks.begin() + 1; i != snks.end(); ++i)
+    mgr->add_outbound_path(*i);
 }
 
-using cow_msg = std::shared_ptr<msg>;
+struct sink_state {
+  const char* name = "sink";
+};
 
-} // namespace <anonymous>
-
-CAF_ALLOW_UNSAFE_MESSAGE_TYPE(cow_msg)
-
-CAF_ALLOW_UNSAFE_MESSAGE_TYPE(vector<cow_msg>)
-
-namespace {
-
-void cow_source(event_based_actor* self, vector<actor> snks) {
-  auto mgr = self->make_source(
-    snks.front(),
-    [](size_t& n) {
-      n = 0;
-    },
-    [](size_t& n, downstream<cow_msg>& out, size_t hint) {
-      auto num = std::min(num_messages - n, hint);
-      for (size_t i = 0; i < num; ++i)
-        out.push(std::make_shared<msg>("programming", make_data()));
-      n += num;
-    },
-    [](const size_t& n) {
-      return n == num_messages;
-    }
-  ).ptr();
-  snks.erase(snks.begin());
-  for (auto& snk : snks)
-    mgr->add_unchecked_outbound_path<cow_msg>(snk);
-}
-
-behavior sink(event_based_actor* self, actor cb) {
+template <class T>
+behavior sink(stateful_actor<sink_state>* self, actor cb) {
   return {
-    [=](stream<msg> in) {
+    [=](stream<T> in) {
       self->make_sink(
         in,
         [](unit_t&) {
           // nop
         },
-        [](unit_t&, msg) {
-          // nop
-        },
-        [=](const unit_t&) {
-          self->send(cb, ok_atom::value);
-        }
-      );
-    },
-    [=](stream<cow_msg> in) {
-      self->make_sink(
-        in,
-        [](unit_t&) {
-          // nop
-        },
-        [](unit_t&, cow_msg) {
+        [](unit_t&, T) {
           // nop
         },
         [=](const unit_t&) {
@@ -115,50 +98,88 @@ behavior sink(event_based_actor* self, actor cb) {
   };
 }
 
+struct core_state {
+  const char* name = "core";
+};
+
+template <class T>
+behavior core(stateful_actor<core_state>* self, actor cb, int num_subs) {
+  auto stage = self->make_continuous_stage(
+    // initialize state
+    [](unit_t&) {
+      // nop
+    },
+    // processing step
+    [](unit_t&, downstream<T>& out, T x) {
+      out.push(std::move(x));
+    },
+    // cleanup
+    [=](unit_t&, const error&) {
+      self->send(cb, ok_atom::value);
+    }
+  );
+  for (auto i = 0; i < num_subs; ++i)
+    stage->add_outbound_path(self->spawn(sink<T>, cb));
+  return {
+    [=](stream<T> in) {
+      stage->continuous(false);
+      return stage->add_inbound_path(in);
+    },
+  };
+}
+
 struct fixture : benchmark::Fixture {
   actor_system_config cfg;
   actor_system sys;
   scoped_actor self;
-  vector<actor> snks;
   vector<char> blob;
   cv raw;
 
   fixture() : sys(cfg), self(sys) {
-    for (auto i = 0; i < 5; ++i)
-      snks.emplace_back(sys.spawn(sink, self));
     blob.resize(264);
     raw = make_data();
   }
+};
 
-  void wait_till_done() {
-    for (size_t i = 0; i < snks.size(); ++i)
-      self->receive(
-        [&](ok_atom res) {
-          benchmark::DoNotOptimize(res);
-        }
-      );
-  }
-
-  void BenchmarkCase(benchmark::State&) {
-    // nop
+template <class T>
+struct core_fixture : fixture {
+  void run(benchmark::State& state) {
+    int subs = state.range(0) ;
+    for (auto _ : state) {
+      sys.spawn(source<T>, vector<actor>{sys.spawn(core<T>, self, subs)});
+      for (auto i = 0; i < subs + 1; ++i)
+        self->receive(
+          [&](ok_atom) {
+            // nop
+          }
+        );
+    }
   }
 };
 
 } // namespace <anonymous>
 
-BENCHMARK_F(fixture, ValueTest)(benchmark::State& state) {
-  for (auto _ : state) {
-    sys.spawn(source, snks);
-    wait_till_done();
-  }
+BENCHMARK_TEMPLATE_DEFINE_F(core_fixture, ValueTest, msg)(benchmark::State& state) {
+  run(state);
 }
 
-BENCHMARK_F(fixture, PointerTest)(benchmark::State& state) {
-  for (auto _ : state) {
-    sys.spawn(cow_source, snks);
-    wait_till_done();
-  }
+BENCHMARK_REGISTER_F(core_fixture, ValueTest)
+    ->Arg(1)
+    ->Arg(2)
+    ->Arg(3)
+    ->Arg(4)
+    ->Arg(5);
+
+BENCHMARK_TEMPLATE_DEFINE_F(core_fixture, CowTest, cow_msg)(benchmark::State& state) {
+  run(state);
 }
+
+BENCHMARK_REGISTER_F(core_fixture, CowTest)
+    ->Arg(1)
+    ->Arg(2)
+    ->Arg(3)
+    ->Arg(4)
+    ->Arg(5);
 
 BENCHMARK_F(fixture, SerializeRaw)(benchmark::State& state) {
   for (auto _ : state) {
