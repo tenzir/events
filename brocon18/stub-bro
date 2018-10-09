@@ -1,0 +1,29 @@
+#!/usr/bin/env python
+
+import broker
+import broker.bro
+import uuid
+
+# Create endpoint & subscribers.
+endpoint = broker.Endpoint()
+subscriber = endpoint.make_subscriber(["/vast/data"])
+status_subscriber = endpoint.make_status_subscriber(True)
+# Loop until peering established successfully.
+endpoint.peer("127.0.0.1", 43000, 1.0)
+while True:
+    x = status_subscriber.get()
+    if isinstance(x, broker.Status) and x.code() == broker.SC.PeerAdded:
+        break
+# Create an event.
+query_id = str(uuid.uuid4()) # random value
+event = broker.bro.Event("VAST::query", query_id, ":addr in 10.0.0.0/8")
+# Send the event to subscriber(s).
+endpoint.publish("/vast/control", event)
+# Loop until we got all results.
+while True:
+    topic, data = subscriber.get()
+    event = broker.bro.Event(data)
+    print(topic, event.args())
+    (qid, result) = event.args()
+    if result is None:
+        break; # we're done
