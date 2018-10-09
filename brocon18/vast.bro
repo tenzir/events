@@ -88,7 +88,6 @@ event Broker::peer_lost(endpoint: Broker::EndpointInfo, msg: string)
 # Executes once when a Bro starts up.
 event bro_init()
   {
-  Broker::subscribe(control_topic);
   Broker::subscribe(data_topic);
   Broker::peer(host, tcp_port);
   }

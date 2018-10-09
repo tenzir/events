@@ -26,8 +26,7 @@ class Bro:
     def __init__(self, port):
         self.endpoint = broker.Endpoint()
         # Create a subscriber and register control and data channel.
-        topics = [CONTROL_TOPIC, DATA_TOPIC]
-        self.subscriber = self.endpoint.make_subscriber(topics)
+        self.subscriber = self.endpoint.make_subscriber([DATA_TOPIC])
         # Construct a status subscriber. The boolean flag indicates that we
         # would like to receive errors as well.
         self.status_subscriber = self.endpoint.make_status_subscriber(True)
