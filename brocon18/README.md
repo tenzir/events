@@ -102,6 +102,8 @@ This scenario mocks VAST and Bro with two Python scripts.
 1. Launch the VAST stub: `./stub vast`
 2. Launch the Bro stub: `./stub bro`
 
+We also provide straight-line code of the [VAST stub](stub-vast) and [Bro
+stub](stub-bro) for easier consumption.
 
 ### Example 2: Bro <-> Stub
 
