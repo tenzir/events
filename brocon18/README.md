@@ -178,6 +178,13 @@ Our data and tools for analyzing Broker performance are located in the
 [evaluation](evaluation) directory. Our analysis is twofold: we look at latency
 and throughput.
 
+The following test systems were at our disposal:
+
+- macOS Mojave 10.14, iMac 18,3, Intel i7-7700K (8) @ 4.20GHz, 16 GiB RAM
+- linux nixos unstable (19.03-pre), Dell XPS13 9343,
+  Intel i7-5500U (4) @ 2.40GHz, 8 GiB RAM
+- FreeBSD 11.2 amd64, Intel Xeon E5-2640 (32) @ 2GHz, 128 GiB RAM
+
 ### Latency
 
 We measure latency as round-trip time (RTT) in a ping-pong scenario between peered
@@ -204,13 +211,7 @@ cd evaluation/latency
 
 The two arguments to `benchmark` determine the minimum and maximum number of
 relays to include. The script generates a file `latency.csv`. The
-[latency](evaluation/latency) directory includes runs from the following
-machines:
-
-- macOS Mojave 10.14, iMac 18,3, Intel i7-7700K (8) @ 4.20GHz, 16 GiB RAM
-- linux nixos unstable (19.03-pre), Dell XPS13 9343,
-  Intel i7-5500U (4) @ 2.40GHz, 8 GiB RAM
-- FreeBSD 11.2 amd64, Intel Xeon E5-2640 (32) @ 2GHz, 128 GiB RAM
+[latency](evaluation/latency) directory includes runs from our test machines.
 
 We also wrote an [R script](evaluation/visualize.R) that visualize the
 generated data. It takes one or more latency files as input and generates PDFs
@@ -252,11 +253,7 @@ cd evaluation/throughput
 As for the latency evaluation, the two arguments to `benchmark` determine the
 minimum and maximum number of relays to include. The script generates a file
 `throughput.csv`. The [throughput](evaluation/throughput) directory includes runs
-from the following
-machines:
-
-- macOS Mojave 10.14, iMac 18,3, Intel i7-7700K (8) @ 4.20GHz, 16 GiB RAM
-- TODO
+from our test machines.
 
 Our [R script](evaluation/visualize.R) also understands the throughput CSV
 files and generates plots accordingly:
