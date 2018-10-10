@@ -9,9 +9,8 @@ from ipaddress import *
 # Create endpoint & subscribers.
 endpoint = broker.Endpoint()
 subscriber = endpoint.make_subscriber(["/vast/control"])
-status_subscriber = endpoint.make_status_subscriber(True)
-# Loop until peering established successfully.
 endpoint.listen("127.0.0.1", 43000)
+# Loop until peering established successfully.
 while True:
     print("waiting for commands")
     (topic, data) = subscriber.get()

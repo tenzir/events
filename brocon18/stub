@@ -27,16 +27,8 @@ class Bro:
         self.endpoint = broker.Endpoint()
         # Create a subscriber and register control and data channel.
         self.subscriber = self.endpoint.make_subscriber([DATA_TOPIC])
-        # Construct a status subscriber. The boolean flag indicates that we
-        # would like to receive errors as well.
-        self.status_subscriber = self.endpoint.make_status_subscriber(True)
         log("peering with VAST")
-        self.endpoint.peer("127.0.0.1", port, 1.0)
-        while True:
-            x = self.status_subscriber.get()
-            if isinstance(x, broker.Status) and x.code() == broker.SC.PeerAdded:
-                break
-        subscriptions = self.endpoint.peer_subscriptions()
+        self.endpoint.peer("127.0.0.1", port)
         log("established peering successfully")
 
     def query(self, expression):
