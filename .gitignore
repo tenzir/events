@@ -4,5 +4,6 @@ brocon18/.state
 brocon18/*.log
 brocon18/bro
 brocon18/env
+brocon18/evaluation/throughput/generate
 brocon18/trace.pcap.gz
 brocon18/vast
