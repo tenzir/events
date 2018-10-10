@@ -23,6 +23,7 @@ for dir in "$@"; do
     fi
     # Add Bro path.
     if [ -d "$dir/bro/build" ]; then
+      PATH="$dir/bro/build/src:$PATH"
       echo export BROPATH=\"$($dir/bro/build/bro-path-dev)\"
     fi
   fi
