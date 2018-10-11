@@ -184,6 +184,7 @@ The following test systems were at our disposal:
 - linux nixos unstable (19.03-pre), Dell XPS13 9343,
   Intel i7-5500U (4) @ 2.40GHz, 8 GiB RAM
 - FreeBSD 11.2 amd64, Intel Xeon E5-2640 (32) @ 2GHz, 128 GiB RAM
+- OpenSUSE Leap 42.3, AMD Opteron 6376, (2x16) 2.3 GHz, 512 GiB RAM
 
 ### Latency
 
