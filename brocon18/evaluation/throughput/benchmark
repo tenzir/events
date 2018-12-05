@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
 function cleanup {
-  $(killall broker-node 2> /dev/null)
-  $(killall broker-pipe 2> /dev/null)
+  $(pkill -15 broker-node 2> /dev/null)
+  $(pkill -15 broker-pipe 2> /dev/null)
 }
 trap cleanup INT TERM EXIT
 
