@@ -264,5 +264,13 @@ cd evaluation
 ./visualize.R throughput/imac-18-3-mojave.csv
 ```
 
+To install dependencies of the script, open the R shell and run:
+
+```shell
+install.packages("dplyr")
+install.packages("ggplot2")
+install.packages("tidyr")
+```
+
 [caf]: https://github.com/actor-framework/actor-framework
 [brocon18]: https://www.brocon2018.com
