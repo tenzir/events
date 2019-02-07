@@ -2,7 +2,18 @@
 
 This repository contains slides and examples from events that we attended.
 
-## BroCon 2018
+## DFN Conference on Security in Networked Systems - Feb 2019
+
+At this year's [DFN conference on Security in Networked
+Systems](https://www.dfn-cert.de/veranstaltungen/sicherheitskonferenz2019.html),
+we gave a demo on how to perform live correlation of threat intelligence with
+historical data. Concretely, we showed how to tap into
+[MISP](http://www.misp-project.org) feeds in real time and translate new
+indicators into queries over old data. Our tool reports hits in historical data
+back to MISP as *sightings*. This makes it possible to understand whether an
+organization has been breached even before the indicator became available.
+
+## BroCon - Oct 2018
 
 At [BroCon 2018](https://www.brocon18.com) we talked about automated analysis
 with [Broker](https://github.com/bro/broker). We used the example of automatic
