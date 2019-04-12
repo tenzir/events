@@ -2,6 +2,17 @@
 
 This repository contains slides and examples from events that we attended.
 
+## Zeek Workshop Europe - Apr 2019
+
+At the [Zeek Workshop Europe](https://indico.cern.ch/event/762505/) at CERN,
+we showed how to bring together [MISP](http://www.misp-project.org) and
+[Zeek](https://www.zeek.org). This presentation was a joint talk with Liviu
+Vâlsan (@liviuvalsan) who explained how to use this prototype operationally at
+the CERN SOC. Our *robo investigator* expands on our approach that we
+presented two months earlier (see below). In addition to correlating historical
+sightings, *robo* now also interfaces with Zeek to propagate changes to intel
+in real time and report "noisy" intel items.
+
 ## DFN Conference on Security in Networked Systems - Feb 2019
 
 At this year's [DFN conference on Security in Networked
