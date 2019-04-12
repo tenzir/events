@@ -2,6 +2,11 @@
 
 This repository contains slides and examples from events that we attended.
 
+Download slides from all events as PDF:
+  - [Zeek Workshop Europe 2019][zeekshop19]
+  - [DFN Conference on Security in Networked Systems][dfnconf19]
+  - [BroCon 2018][brocon18]
+
 ## Zeek Workshop Europe - Apr 2019
 
 At the [Zeek Workshop Europe](https://indico.cern.ch/event/762505/) at CERN,
@@ -40,3 +45,7 @@ Broker & Bro code:
 
 See the [brocon18](brocon18) directory for the complete list of accompanying
 material.
+
+[zeekshop19]: https://github.com/tenzir/events/releases/download/zeekshop19/slides.pdf
+[dfnconf19]: https://github.com/tenzir/events/releases/download/dfnconf19/slides.pdf
+[brocon18]: https://github.com/tenzir/events/releases/download/brocon18/slides.pdf
