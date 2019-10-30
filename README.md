@@ -3,9 +3,21 @@
 This repository contains slides and examples from events that we attended.
 
 Download slides from all events as PDF:
+
+  - [Suricon 2019][suricon19]
   - [Zeek Workshop Europe 2019][zeekshop19]
   - [DFN Conference on Security in Networked Systems][dfnconf19]
   - [BroCon 2018][brocon18]
+
+## Suricon - October 2019
+
+At the [Suricon](https://suricon.net) in Amsterdam, we demonstrated how to
+pivot between different network telemetry with [VAST][vast]. In particular,
+we showed how one can extract the PCAP packets corresponding to a specific
+Suricata alert. The idea is model VAST's schema as a graph, where edges
+correspond to different types and edges exist if it is possible to join over a
+common record field. Users just express the pivot destination, e.g., *"give me
+all PCAPs for alerts with severity N of type X"*.
 
 ## Zeek Workshop Europe - Apr 2019
 
@@ -33,7 +45,7 @@ organization has been breached even before the indicator became available.
 
 At [BroCon 2018](https://www.brocon18.com) we talked about automated analysis
 with [Broker](https://github.com/bro/broker). We used the example of automatic
-historic intelligence lookups with [VAST](https://github.com/vast-io/vast) to
+historic intelligence lookups with [VAST][vast] to
 illustrate the Broker API. Additionally, we performed a performance analysis of
 Broker in terms of throughput and latency.
 
@@ -46,6 +58,8 @@ Broker & Bro code:
 See the [brocon18](brocon18) directory for the complete list of accompanying
 material.
 
+[suricon19]: https://github.com/tenzir/events/releases/download/suricon19/slides.pdf
 [zeekshop19]: https://github.com/tenzir/events/releases/download/zeekshop19/slides.pdf
 [dfnconf19]: https://github.com/tenzir/events/releases/download/dfnconf19/slides.pdf
 [brocon18]: https://github.com/tenzir/events/releases/download/brocon18/slides.pdf
+[vast]: https://github.com/tenzir/vast
