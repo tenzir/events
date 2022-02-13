@@ -4,20 +4,31 @@ This repository contains slides and examples from events that we attended.
 
 Download slides from all events as PDF:
 
-  - [Suricon 2019][suricon19]
-  - [Zeek Workshop Europe 2019][zeekshop19]
-  - [DFN Conference on Security in Networked Systems][dfnconf19]
-  - [BroCon 2018][brocon18]
+- [Suricon 2021][suricon21]
+- [Suricon 2019][suricon19]
+- [Zeek Workshop Europe 2019][zeekshop19]
+- [DFN Conference on Security in Networked Systems][dfnconf19]
+- [BroCon 2018][brocon18]
+
+## Suricon - November 2021
+
+At [Suricon 2021](https://suricon.net/suricon-2021-boston/) in Boston, we
+co-presented with [DCSO](https://github.com/dcso) on a production architecture
+for threat-intelligence-based detection that unifies historical and live
+alerting. The architecture leverages [VAST](https://github.com/tenzir/vast) as
+embedded telemetry engine to deliver historical metadata as via [Threat
+Bus](https://github.com/tenzir/threatbus), such that they appear as an `alert`
+event that is indistinguishable from a live alert.
 
 ## Suricon - October 2019
 
-At the [Suricon](https://suricon.net) in Amsterdam, we demonstrated how to
-pivot between different network telemetry with [VAST][vast]. In particular,
-we showed how one can extract the PCAP packets corresponding to a specific
-Suricata alert. The idea is model VAST's schema as a graph, where edges
-correspond to different types and edges exist if it is possible to join over a
-common record field. Users just express the pivot destination, e.g., *"give me
-all PCAPs for alerts with severity N of type X"*.
+At [Suricon 2019](https://suricon.net/suricon-2019-amsterdam/) in Amsterdam, we
+demonstrated how to pivot between different network telemetry with
+[VAST][vast]. In particular, we showed how one can extract the PCAP packets
+corresponding to a specific Suricata alert. The idea is model VAST's schema as
+a graph, where edges correspond to different types and edges exist if it is
+possible to join over a common record field. Users just express the pivot
+destination, e.g., *"give me all PCAPs for alerts with severity N of type X"*.
 
 ## Zeek Workshop Europe - Apr 2019
 
@@ -58,6 +69,7 @@ Broker & Bro code:
 See the [brocon18](brocon18) directory for the complete list of accompanying
 material.
 
+[suricon21]: https://github.com/tenzir/events/releases/download/suricon21/slides.pdf
 [suricon19]: https://github.com/tenzir/events/releases/download/suricon19/slides.pdf
 [zeekshop19]: https://github.com/tenzir/events/releases/download/zeekshop19/slides.pdf
 [dfnconf19]: https://github.com/tenzir/events/releases/download/dfnconf19/slides.pdf
