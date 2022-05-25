@@ -4,11 +4,21 @@ This repository contains slides and examples from events that we attended.
 
 Download slides from all events as PDF:
 
+- [The International Conference on the EU Cyber Act 2022][iceca22]
 - [Suricon 2021][suricon21]
 - [Suricon 2019][suricon19]
 - [Zeek Workshop Europe 2019][zeekshop19]
 - [DFN Conference on Security in Networked Systems][dfnconf19]
 - [BroCon 2018][brocon18]
+
+## The International Conference on the EU Cyber Act - May 2022
+
+At [the International Conference on the EU Cyber Act
+2022](https://eucyberact.org/), we co-presented with IBM Security's [Jason
+Keirstead](https://twitter.com/BlueTeamJK) about how standardization alone is
+insufficient to create an open, interoperable ecosystem of security tools. Going
+back to the articles in the act, we identified market and operational themes
+that need to be addressed comprehensively in order to have a real-world impact.
 
 ## Suricon - November 2021
 
@@ -69,6 +79,7 @@ Broker & Bro code:
 See the [brocon18](brocon18) directory for the complete list of accompanying
 material.
 
+[iceca22]: https://github.com/tenzir/events/releases/download/iceca22/slides.pdf
 [suricon21]: https://github.com/tenzir/events/releases/download/suricon21/slides.pdf
 [suricon19]: https://github.com/tenzir/events/releases/download/suricon19/slides.pdf
 [zeekshop19]: https://github.com/tenzir/events/releases/download/zeekshop19/slides.pdf
