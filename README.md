@@ -1,15 +1,26 @@
 # Tenzir Events
 
-This repository contains slides and examples from events that we attended.
+This repository contains slides and supplementary materials from events that we
+attended.
 
-Download slides from all events as PDF:
+Slides (in reverse-chronological order):
 
+- [Potsdam Conference on National CyberSecurity][potsdam22]
 - [The International Conference on the EU Cyber Act 2022][iceca22]
 - [Suricon 2021][suricon21]
 - [Suricon 2019][suricon19]
 - [Zeek Workshop Europe 2019][zeekshop19]
 - [DFN Conference on Security in Networked Systems][dfnconf19]
 - [BroCon 2018][brocon18]
+
+## Potsdam Conference on National CyberSecurity - June 2022
+
+At the [Potsdam Conference on National CyberSecurity][potsdam22-conf] we
+highlighted one of the core problems of large SOCs: handling the complexity
+imposed by a myriad of interconnected security tools. We showed how [VAST][vast]
+can help from an architectural standpoint, as a "sidecar for the SOC."
+
+[potsdam22-conf]: https://hpi.de/en/the-hpi/events/conferences/potsdam-conference-for-national-cybersecurity/conference.html
 
 ## The International Conference on the EU Cyber Act - May 2022
 
@@ -79,6 +90,7 @@ Broker & Bro code:
 See the [brocon18](brocon18) directory for the complete list of accompanying
 material.
 
+[potsdam22]: https://github.com/tenzir/events/releases/download/potsdam22/slides.pdf
 [iceca22]: https://github.com/tenzir/events/releases/download/iceca22/slides.pdf
 [suricon21]: https://github.com/tenzir/events/releases/download/suricon21/slides.pdf
 [suricon19]: https://github.com/tenzir/events/releases/download/suricon19/slides.pdf
