@@ -5,6 +5,7 @@ attended.
 
 Slides (in reverse-chronological order):
 
+- [The Data Thread 2022][datathread22]
 - [Potsdam Conference on National CyberSecurity][potsdam22]
 - [The International Conference on the EU Cyber Act 2022][iceca22]
 - [Suricon 2021][suricon21]
@@ -12,6 +13,13 @@ Slides (in reverse-chronological order):
 - [Zeek Workshop Europe 2019][zeekshop19]
 - [DFN Conference on Security in Networked Systems][dfnconf19]
 - [BroCon 2018][brocon18]
+
+## The Data Thread - June 2022
+
+At [The Data Thread](https://thedatathread.com/), we presented how 
+[VAST][vast] uses [Apache Arrow](https://arrow.apache.org) as data engineering
+toolkit. We showcase VAST's architecture and how Arrow helps us with
+interoperability of security data.
 
 ## Potsdam Conference on National CyberSecurity - June 2022
 
@@ -36,8 +44,8 @@ that need to be addressed comprehensively in order to have a real-world impact.
 At [Suricon 2021](https://suricon.net/suricon-2021-boston/) in Boston, we
 co-presented with [DCSO](https://github.com/dcso) on a production architecture
 for threat-intelligence-based detection that unifies historical and live
-alerting. The architecture leverages [VAST](https://github.com/tenzir/vast) as
-embedded telemetry engine to deliver historical metadata as via [Threat
+alerting. The architecture leverages [VAST][vast] as embedded telemetry engine
+to deliver historical metadata as via [Threat
 Bus](https://github.com/tenzir/threatbus), such that they appear as an `alert`
 event that is indistinguishable from a live alert.
 
@@ -90,6 +98,7 @@ Broker & Bro code:
 See the [brocon18](brocon18) directory for the complete list of accompanying
 material.
 
+[datathread22]: https://github.com/tenzir/events/releases/download/datathread22/slides.pdf
 [potsdam22]: https://github.com/tenzir/events/releases/download/potsdam22/slides.pdf
 [iceca22]: https://github.com/tenzir/events/releases/download/iceca22/slides.pdf
 [suricon21]: https://github.com/tenzir/events/releases/download/suricon21/slides.pdf
@@ -97,4 +106,4 @@ material.
 [zeekshop19]: https://github.com/tenzir/events/releases/download/zeekshop19/slides.pdf
 [dfnconf19]: https://github.com/tenzir/events/releases/download/dfnconf19/slides.pdf
 [brocon18]: https://github.com/tenzir/events/releases/download/brocon18/slides.pdf
-[vast]: https://github.com/tenzir/vast
+[vast]: https://vast.io
