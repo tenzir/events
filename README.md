@@ -87,16 +87,8 @@ At [BroCon 2018](https://www.brocon18.com) we talked about automated analysis
 with [Broker](https://github.com/bro/broker). We used the example of automatic
 historic intelligence lookups with [VAST][vast] to
 illustrate the Broker API. Additionally, we performed a performance analysis of
-Broker in terms of throughput and latency.
-
-Broker & Bro code:
-
-- Python stubs: [Bro](brocon18/stub-bro), [VAST](brocon18/stub-vast)
-- [Bro script](brocon18/vast.bro)
-- [`bro-vast`](https://github.com/tenzir/bro-vast) package
-
-See the [brocon18](brocon18) directory for the complete list of accompanying
-material.
+Broker in terms of throughput and latency. See the [brocon18](brocon18)
+directory for the complete list of accompanying material.
 
 [datathread22]: https://github.com/tenzir/events/releases/download/datathread22/slides.pdf
 [potsdam22]: https://github.com/tenzir/events/releases/download/potsdam22/slides.pdf
