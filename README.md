@@ -5,14 +5,14 @@ attended.
 
 Slides (in reverse-chronological order):
 
-- [The Data Thread 2022][datathread22]
-- [Potsdam Conference on National CyberSecurity][potsdam22]
-- [The International Conference on the EU Cyber Act 2022][iceca22]
-- [Suricon 2021][suricon21]
-- [Suricon 2019][suricon19]
-- [Zeek Workshop Europe 2019][zeekshop19]
-- [DFN Conference on Security in Networked Systems][dfnconf19]
-- [BroCon 2018][brocon18]
+- [The Data Thread][datathread22] - June 2022
+- [Potsdam Conference on National CyberSecurity][potsdam22] - Jun 2022
+- [The International Conference on the EU Cyber Act][iceca22] - May 2022
+- [Suricon][suricon21] - November 2021  
+- [Suricon][suricon19] - October 2019
+- [Zeek Workshop Europe][zeekshop19] - April 2019
+- [DFN Conference on Security in Networked Systems][dfnconf19] - February 2019
+- [BroCon][brocon18] - October 2018
 
 ## The Data Thread - June 2022
 
@@ -59,7 +59,7 @@ a graph, where edges correspond to different types and edges exist if it is
 possible to join over a common record field. Users just express the pivot
 destination, e.g., *"give me all PCAPs for alerts with severity N of type X"*.
 
-## Zeek Workshop Europe - Apr 2019
+## Zeek Workshop Europe - April 2019
 
 At the [Zeek Workshop Europe](https://indico.cern.ch/event/762505/) at CERN,
 we showed how to bring together [MISP](http://www.misp-project.org) and
@@ -70,7 +70,7 @@ earlier (see below). In addition to correlating historical sightings, *robo*
 now also interfaces with Zeek to propagate changes to intel in real time and
 report "noisy" intel items.
 
-## DFN Conference on Security in Networked Systems - Feb 2019
+## DFN Conference on Security in Networked Systems - February 2019
 
 At this year's [DFN conference on Security in Networked
 Systems](https://www.dfn-cert.de/veranstaltungen/sicherheitskonferenz2019.html),
@@ -81,7 +81,7 @@ indicators into queries over old data. Our tool reports hits in historical data
 back to MISP as *sightings*. This makes it possible to understand whether an
 organization has been breached even before the indicator became available.
 
-## BroCon - Oct 2018
+## BroCon - October 2018
 
 At [BroCon 2018](https://www.brocon18.com) we talked about automated analysis
 with [Broker](https://github.com/bro/broker). We used the example of automatic
