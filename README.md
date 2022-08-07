@@ -104,6 +104,7 @@ directory for the complete list of accompanying material.
 [potsdam22]: https://github.com/tenzir/events/releases/download/potsdam22/slides.pdf
 [iceca22]: https://github.com/tenzir/events/releases/download/iceca22/slides.pdf
 [suricon21]: https://github.com/tenzir/events/releases/download/suricon21/slides.pdf
+[zeekweek21]: https://github.com/tenzir/events/releases/download/zeekweek21/slides.pdf
 [suricon19]: https://github.com/tenzir/events/releases/download/suricon19/slides.pdf
 [zeekshop19]: https://github.com/tenzir/events/releases/download/zeekshop19/slides.pdf
 [dfnconf19]: https://github.com/tenzir/events/releases/download/dfnconf19/slides.pdf
