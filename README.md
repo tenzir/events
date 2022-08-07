@@ -9,6 +9,7 @@ Slides (in reverse-chronological order):
 - [Potsdam Conference on National CyberSecurity][potsdam22] - Jun 2022
 - [The International Conference on the EU Cyber Act][iceca22] - May 2022
 - [Suricon][suricon21] - November 2021  
+- [ZeekWeek][zeekweek21] - October 2021  
 - [Suricon][suricon19] - October 2019
 - [Zeek Workshop Europe][zeekshop19] - April 2019
 - [DFN Conference on Security in Networked Systems][dfnconf19] - February 2019
@@ -48,6 +49,15 @@ alerting. The architecture leverages [VAST][vast] as embedded telemetry engine
 to deliver historical metadata as via [Threat
 Bus](https://github.com/tenzir/threatbus), such that they appear as an `alert`
 event that is indistinguishable from a live alert.
+
+## ZeekWeek - October 2021
+
+At [ZeekWeek 2021](https://zeek.org/zeekweek2021/), we presented how VAST can
+become a Zeek logger node and transparently receive logs from a Zeek cluster in
+an optimal fashion. To this end, we wrote a
+[Broker](https://github.com/zeek/broker) plugin to acquire the binary log data.
+We then reverse-engineered the binary message format of batched logs, which
+allowed us to convert them directly into VAST's data plane using Apache Arrow.
 
 ## Suricon - October 2019
 
