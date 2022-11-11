@@ -1,10 +1,11 @@
 # Tenzir Events
 
-This repository contains slides and supplementary materials from events that we
-attended.
+This repository contains slides and supplementary materials from events where we
+presented a talk.
 
 Slides (in reverse-chronological order):
 
+- [Suricon][suricon22] - November 2022
 - [The Data Thread][datathread22] - June 2022
 - [Potsdam Conference on National CyberSecurity][potsdam22] - Jun 2022
 - [The International Conference on the EU Cyber Act][iceca22] - May 2022
@@ -14,6 +15,13 @@ Slides (in reverse-chronological order):
 - [Zeek Workshop Europe][zeekshop19] - April 2019
 - [DFN Conference on Security in Networked Systems][dfnconf19] - February 2019
 - [BroCon][brocon18] - October 2018
+
+## Suricon - November 2022
+
+At [Suricon](https://suricon.net/), we showed how you can get more runway out of
+your EVE JSON logs by compacting them with [VAST][vast]. We explained how
+compaction works as a trigger for pipelines that aggregate the EVE logs into a
+more space-efficient representation.
 
 ## The Data Thread - June 2022
 
@@ -100,6 +108,7 @@ illustrate the Broker API. Additionally, we performed a performance analysis of
 Broker in terms of throughput and latency. See the [brocon18](brocon18)
 directory for the complete list of accompanying material.
 
+[suricon22]: https://github.com/tenzir/events/releases/download/suricon22/slides.pdf
 [datathread22]: https://github.com/tenzir/events/releases/download/datathread22/slides.pdf
 [potsdam22]: https://github.com/tenzir/events/releases/download/potsdam22/slides.pdf
 [iceca22]: https://github.com/tenzir/events/releases/download/iceca22/slides.pdf
